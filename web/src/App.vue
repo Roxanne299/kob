@@ -1,16 +1,21 @@
 <template>
   <nav>
-    <div>{{user_name}}</div>
-    <div>{{user_age}}</div>
+    <NavBar></NavBar>
   </nav>
   <router-view />
 </template>
 
 <script>
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.min.js";
+import NavBar from "./components/NavBar.vue";
 import $ from "jquery";
 import { ref } from "vue";
 export default {
   name: "App",
+  components: {
+    NavBar,
+  },
   setup() {
     let user_name = ref("");
     let user_age = ref("");
@@ -30,5 +35,9 @@ export default {
 };
 </script>
 
-<style>
+<style >
+body {
+  background-image: url("@/assets/background.png");
+  background-size: cover;
+}
 </style>
