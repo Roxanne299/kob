@@ -1,14 +1,13 @@
 <template>
-    <ContentCard>pk</ContentCard>
+    <PlayGround>PK</PlayGround>
 </template>
 
 <script>
-import ContentCard from '@/components/ContentCard.vue';
-
+import PlayGround from '@/components/PlayGround.vue';
 export default{
     name: "PkIndexView",
     components:{
-        ContentCard,
+        PlayGround,
     },
 }
 </script>
