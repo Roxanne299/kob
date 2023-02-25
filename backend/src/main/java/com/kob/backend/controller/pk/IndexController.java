@@ -14,14 +14,10 @@ public class    IndexController {
     @RequestMapping("getbotinfo/")
     public Map<String,String> getBot()
     {
-<<<<<<< HEAD
-        
-        return "pk/index.html";
-=======
+
         Map<String,String> map = new HashMap<String, String>();
         map.put("Bot_Name","zgy");
         map.put("Bot_age","18");
         return map;
->>>>>>> 0f185d0fac53f2ae716751c0e97b49aeb4d8d8b7
     }
 }
