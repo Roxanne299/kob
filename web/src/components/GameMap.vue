@@ -1,5 +1,7 @@
 <template>
-  <div ref="parent" class="gamemap"><canvas ref="canvas"> </canvas></div>
+  <div ref="parent" class="gamemap">
+    <canvas ref="canvas" tabindex="0"> </canvas>
+  </div>
 </template>
 
 <script>
