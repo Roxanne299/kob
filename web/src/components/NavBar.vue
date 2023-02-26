@@ -16,17 +16,27 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link :class="routeName == 'pk_index' ? 'nav-link active' : 'nav-link'" :to="{ name: 'pk_index' }"
+            <router-link
+              :class="routeName == 'pk_index' ? 'nav-link active' : 'nav-link'"
+              :to="{ name: 'pk_index' }"
               >对战</router-link
             >
           </li>
           <li class="nav-item">
-            <router-link :class="routeName == 'record_index' ? 'nav-link active' : 'nav-link'" :to="{ name: 'record_index' }"
+            <router-link
+              :class="
+                routeName == 'record_index' ? 'nav-link active' : 'nav-link'
+              "
+              :to="{ name: 'record_index' }"
               >对局列表</router-link
             >
           </li>
           <li class="nav-item">
-            <router-link :class="routeName == 'ranklist_index' ? 'nav-link active' : 'nav-link'" :to="{ name: 'ranklist_index' }"
+            <router-link
+              :class="
+                routeName == 'ranklist_index' ? 'nav-link active' : 'nav-link'
+              "
+              :to="{ name: 'ranklist_index' }"
               >排行榜</router-link
             >
           </li>
@@ -44,7 +54,13 @@
             </a>
             <ul class="dropdown-menu">
               <li>
-                <router-link :class="routeName == 'userbot_index' ? 'dropdown-item active' : 'dropdown-item'" :to="{ name: 'userbot_index' }"
+                <router-link
+                  :class="
+                    routeName == 'userbot_index'
+                      ? 'dropdown-item active'
+                      : 'dropdown-item'
+                  "
+                  :to="{ name: 'userbot_index' }"
                   >我的Bot</router-link
                 >
               </li>
@@ -59,18 +75,20 @@
 </template>
 
 <script>
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 
 export default {
   name: "NavBar",
-  setup(){
+  setup() {
     const route = new useRoute();
-    let routeName = computed(()=>{return route.name;});
+    let routeName = computed(() => {
+      return route.name;
+    });
 
-    return{
-        routeName
-    }
+    return {
+      routeName,
+    };
   },
 };
 </script>

@@ -1,15 +1,15 @@
 <template>
-    <PlayGround>PK</PlayGround>
+  <PlayGround>PK</PlayGround>
 </template>
 
 <script>
-import PlayGround from '@/components/PlayGround.vue';
-export default{
-    name: "PkIndexView",
-    components:{
-        PlayGround,
-    },
-}
+import PlayGround from "@/components/PlayGround.vue";
+export default {
+  name: "PkIndexView",
+  components: {
+    PlayGround,
+  },
+};
 </script>
 
 <style scoped>
