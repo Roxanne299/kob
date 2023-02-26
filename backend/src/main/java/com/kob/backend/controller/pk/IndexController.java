@@ -14,7 +14,6 @@ public class    IndexController {
     @RequestMapping("getbotinfo/")
     public Map<String,String> getBot()
     {
-
         Map<String,String> map = new HashMap<String, String>();
         map.put("Bot_Name","zgy");
         map.put("Bot_age","18");
