@@ -114,8 +114,6 @@ export class Snake extends AcGameObject {
             this.status = "die";//下一步操作撞了 蛇瞬间去势
         }
 
-
-
     }
 
     //渲染画面
