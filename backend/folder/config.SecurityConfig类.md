@@ -1,5 +1,4 @@
-package com.kob.backend.config;
-
+```java
 import com.kob.backend.config.filter.JwtAuthenticationTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    //这里添加放行的接口
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -45,3 +43,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
+```
+
