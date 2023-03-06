@@ -15,8 +15,7 @@ import java.util.Map;
 @Service
 public class InfoServiceImpl implements InfoService {
 
-    @Autowired
-    private UserMapper userMapper;
+
     @Override
     public Map<String, String> getInfo() {
         //用户登录成功之后可以从上下文获取

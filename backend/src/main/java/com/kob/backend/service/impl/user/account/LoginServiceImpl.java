@@ -20,8 +20,10 @@ public class LoginServiceImpl implements LoginService {
     private AuthenticationManager authenticationManager;
     @Override
     public Map<String, String> getToken(String username, String password) {
+        //先创造token 不管登录没登录
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username,password);
+        //再使用authenticationManager轮询Provider查看是否正确，参数为token
         Authentication authenticate = authenticationManager.authenticate(authenticationToken);//登录失败自动处理
 
         UserDetailsImpl loginUser = (UserDetailsImpl)authenticate.getPrincipal();
