@@ -1,5 +1,5 @@
 <template>
-  <ContentCard v-if="$store.state.user.polling">
+  <ContentCard v-if="!$store.state.user.polling">
     <div class="row justify-content-md-center">
       <div class="col-3">
         <form @submit.prevent="login">
@@ -51,7 +51,7 @@ export default {
 
     store.commit("updatePolling",true);
     if (token == null) {
-      console.log("null token");
+      store.commit("updatePolling",false);
     } else {
       //更新全局信息token
       store.commit("updateToken", token);
@@ -59,13 +59,14 @@ export default {
         success() {
           //验证成功跳转到首页
           router.push({ name: "pk_index" });
+          store.commit("updatePolling",false);
         },
         error() {
           localStorage.removeItem("token");
+          store.commit("updatePolling",false);
         },
       });
     }
-    store.commit("updatePolling",false);
 
     const login = () => {
       error_message.value = "";

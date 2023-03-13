@@ -28,6 +28,7 @@ const ModuleUser = {
             state.photo = "";
             state.token = "";
             state.is_login = false;
+            state.polling = false;
             localStorage.removeItem("token");
             //防止还能访问当前页面 跳转登录页面
             router.push({name: "user_account_login"});
