@@ -1,5 +1,5 @@
 <template>
-  <ContentCard>
+  <ContentCard v-if="$store.state.user.polling">
     <div class="row justify-content-md-center">
       <div class="col-3">
         <form @submit.prevent="login">
@@ -31,7 +31,7 @@
   </ContentCard>
 </template>
   
-  <script>
+<script>
 import ContentCard from "@/components/ContentCard.vue";
 import { useStore } from "vuex";
 import { ref } from "vue";
@@ -47,6 +47,25 @@ export default {
     const username = ref("");
     const password = ref("");
     const error_message = ref("");
+    let token = localStorage.getItem("token");
+
+    store.commit("updatePolling",true);
+    if (token == null) {
+      console.log("null token");
+    } else {
+      //更新全局信息token
+      store.commit("updateToken", token);
+      store.dispatch("getInfo", {
+        success() {
+          //验证成功跳转到首页
+          router.push({ name: "pk_index" });
+        },
+        error() {
+          localStorage.removeItem("token");
+        },
+      });
+    }
+    store.commit("updatePolling",false);
 
     const login = () => {
       error_message.value = "";
@@ -82,7 +101,7 @@ export default {
 };
 </script>
   
-  <style scoped>
+<style scoped>
 button {
   width: 100%;
 }

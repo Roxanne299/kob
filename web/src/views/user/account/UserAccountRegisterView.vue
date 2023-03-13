@@ -98,4 +98,7 @@ export default {
   .error_message{
   color:red;
 }
+button{
+  width: 100%;
+}
 </style>
