@@ -19,6 +19,7 @@
                 class="btn btn-secondary float-end"
                 data-bs-toggle="modal"
                 data-bs-target="#bot_add_modal"
+                @click="clear_error"
               >
                 创建bot
               </button>
@@ -124,7 +125,8 @@
                         style="margin-right: 10px"
                         class="btn btn-secondary"
                         data-bs-toggle="modal"
-                        data-bs-target="#update_modal"
+                        :data-bs-target="'#update_modal'+bot.id"
+                        @click="clear_error"
                       >
                         修改
                       </button>
@@ -132,7 +134,7 @@
                       <!-- Modal -->
                       <div
                         class="modal fade"
-                        id="update_modal"
+                        :id="'update_modal' + bot.id"
                         data-bs-backdrop="static"
                         data-bs-keyboard="false"
                         tabindex="-1"
@@ -164,8 +166,7 @@
                                   type="text"
                                   class="form-control"
                                   id="title_input"
-                                  v-model="title"
-                                  :placeholder="bot.title"
+                                  v-model="bot.title"
                                 />
                               </div>
                               <div class="mb-3">
@@ -177,9 +178,8 @@
                                 <textarea
                                   class="form-control"
                                   id="description_textarea"
-                                  v-model="description"
+                                  v-model="bot.description"
                                   rows="3"
-                                  :placeholder="bot.description"
                                 ></textarea>
                               </div>
                               <div class="mb-3">
@@ -190,8 +190,7 @@
                                   class="form-control"
                                   id="content_textarea"
                                   rows="3"
-                                  v-model="content"
-                                  :placeholder="bot.content"
+                                  v-model="bot.content"
                                 ></textarea>
                               </div>
                             </div>
@@ -206,7 +205,7 @@
                               >
                                 取消
                               </button>
-                              <button type="button" class="btn btn-primary" @click="update_bot(bot.id)">
+                              <button type="button" class="btn btn-primary" @click="update_bot(bot)">
                                 确认
                               </button>
                             </div>
@@ -271,6 +270,9 @@ export default {
 
     refresh_bots();
 
+    const clear_error = ()=>{
+      error_message.value = "";
+    }
     const add_bot = () => {
       $.ajax({
         url: "http://127.0.0.1:8081/user/bot/add/",
@@ -301,27 +303,24 @@ export default {
       });
     };
 
-    const update_bot = (bot_id) => {
+    const update_bot = (bot) => {
+      error_message.value = "";
       $.ajax({
         url: "http://127.0.0.1:8081/user/bot/update/",
         type: "post",
         data: {
-          bot_id: bot_id,
-          title: title.value,
-          description: description.value,
-          content: content.value,
+          bot_id: bot.id,
+          title: bot.title,
+          description: bot.description,
+          content: bot.content,
         },
         headers: {
           Authorization: "Bearer " + store.state.user.token,
         },
         success(resp) {
           if (resp.error_message == "success") {
-            title.value = "";
-            content.value = "";
-            description.value = "";
-            error_message.value = "";
             refresh_bots();
-            Modal.getInstance("#update_modal").hide();
+            Modal.getInstance("#update_modal"+bot.id).hide();
           } else {
             error_message.value = resp.error_message;
           }
@@ -359,6 +358,7 @@ export default {
       delete_bot,
       bot_id,
       update_bot,
+      clear_error
     };
   },
 };
