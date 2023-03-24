@@ -14,7 +14,7 @@ public class getListController {
     @Autowired
     GetListService getListService;
 
-    @GetMapping("/user/bot/getlist")
+    @GetMapping("/user/bot/getlist/")
     public List<Bot> getList(){
         return getListService.getList();
     }

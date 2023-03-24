@@ -29,8 +29,10 @@ public class AddServiceImpl implements AddService {
 
         User user = loginUser.getUser();
         String title = data.get("title");
-        String descrption = data.get("description");
+        String description = data.get("description");
         String content = data.get("content");
+
+        System.out.print(title + " " + description + " " + content);
 
         Map<String,String> map = new HashMap<>();
 
@@ -44,10 +46,10 @@ public class AddServiceImpl implements AddService {
         }
 
 
-        if(descrption == null || descrption.length() == 0){
-            descrption = "这个用户咩有写描述";
+        if(description == null || description.length() == 0){
+            description = "这个用户咩有写描述";
         }
-        if(descrption.length() > 300){
+        if(description.length() > 300){
             map.put("error_message","Bot描述不能超300");
             return map;
         }
@@ -62,7 +64,7 @@ public class AddServiceImpl implements AddService {
         }
 
         Date date = new Date();
-        Bot bot = new Bot(null, user.getId(),title,descrption,content,1500,date,date);
+        Bot bot = new Bot(null, user.getId(),title,description,content,1500,date,date);
         botMapper.insert(bot);
         map.put("error_message","success");
         return map;
