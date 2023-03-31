@@ -32,8 +32,6 @@ public class AddServiceImpl implements AddService {
         String description = data.get("description");
         String content = data.get("content");
 
-        System.out.print(title + " " + description + " " + content);
-
         Map<String,String> map = new HashMap<>();
 
         if(title == null || title.length() == 0){
