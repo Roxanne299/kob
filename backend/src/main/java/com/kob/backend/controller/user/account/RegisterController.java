@@ -22,8 +22,7 @@ public class RegisterController {
         String password = map.get("password");
         String confirmPassword = map.get("confirmPassword");
         return registerService.register(username,password,confirmPassword);
-        Set<InfoController> m = new HashSet<>();
-        m.c
+
     }
 
 }
