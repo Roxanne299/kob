@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class RegisterController {
@@ -20,6 +22,7 @@ public class RegisterController {
         String password = map.get("password");
         String confirmPassword = map.get("confirmPassword");
         return registerService.register(username,password,confirmPassword);
+
     }
 
 }
