@@ -80,11 +80,11 @@ const router = createRouter({
 
 
 //每次跳转页面之前会检查一下
-router.beforeEach((to,from,next)=>{
-  if(to.meta.requestAuth && !store.state.user.is_login && to.name !== 'user_account_login'){
-    console.log(1);
-    next({name: "user_account_login"});
-  }else{
+router.beforeEach((to, from, next) => {
+  if (to.meta.requestAuth && !store.state.user.is_login && to.name !== 'user_account_login') {
+    console.log("用户未登录....跳转登录页面.....");
+    next({ name: "user_account_login" });
+  } else {
     //跳转到本来要的页面
     next();
   }

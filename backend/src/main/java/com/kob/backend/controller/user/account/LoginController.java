@@ -22,8 +22,4 @@ public class LoginController {
         return loginService.getToken(username,password);
     }
 
-    @GetMapping("/user/")
-    public String get111(){
-        return "test";
-    }
 }

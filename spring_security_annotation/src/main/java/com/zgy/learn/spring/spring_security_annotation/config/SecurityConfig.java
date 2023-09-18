@@ -22,9 +22,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login.html").loginProcessingUrl("/login").permitAll();
-        http.authorizeRequests().antMatchers("/","/login")
-                .permitAll().anyRequest().authenticated();
+        http.formLogin()    //自定义自己的登录页面
+                .loginPage("/login.html")   //登录页面设置
+                .loginProcessingUrl("/login")  //代替系统默认的登录访问路径
+                .permitAll()  //登录成功之后的跳转路径
+                .and().authorizeRequests()  //设置允许的访问路径
+                .antMatchers("/","/login").permitAll()  //访问里面这些路径可以直接访问不需要认证
+//                .antMatchers("/test").hasRole("admins")
+                .anyRequest().authenticated()   //其他的所有都需要认证
+                .and().csrf().disable();    //关闭crsf防护
     }
 
     @Bean

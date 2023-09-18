@@ -73,13 +73,22 @@
                         <label for="content_textarea" class="form-label"
                           >内容</label
                         >
-                        <textarea
-                          class="form-control"
-                          id="content_textarea"
-                          rows="3"
-                          v-model="content"
-                          placeholder="请输入bot代码"
-                        ></textarea>
+                        <VAceEditor
+                          v-model:value="content"
+                          @init="editorInit"
+                          lang="java"
+                          theme="textmate"
+                          style="height: 300px"
+                          :options="{
+                            enableBasicAutocompletion: true, //启用基本自动完成
+                            enableSnippets: true, // 启用代码段
+                            enableLiveAutocompletion: true, // 启用实时自动完成
+                            fontSize: 18, //设置字号
+                            tabSize: 4, // 标签大小
+                            showPrintMargin: false, //去除编辑器里的竖线
+                            highlightActiveLine: true,
+                          }"
+                        />
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -111,6 +120,7 @@
                   <tr>
                     <th scope="col">标题</th>
                     <th scope="col">创建时间</th>
+                    <th scope="col">修改时间</th>
                     <th scope="col">操作</th>
                   </tr>
                 </thead>
@@ -118,6 +128,7 @@
                   <tr v-for="bot in bots" :key="bot.id">
                     <td>{{ bot.title }}</td>
                     <td>{{ bot.createtime }}</td>
+                    <td>{{ bot.modifytime }}</td>
                     <td>
                       <!-- Button trigger modal -->
                       <button
@@ -125,7 +136,7 @@
                         style="margin-right: 10px"
                         class="btn btn-secondary"
                         data-bs-toggle="modal"
-                        :data-bs-target="'#update_modal'+bot.id"
+                        :data-bs-target="'#update_modal' + bot.id"
                         @click="clear_error"
                       >
                         修改
@@ -186,12 +197,22 @@
                                 <label for="content_textarea" class="form-label"
                                   >内容</label
                                 >
-                                <textarea
-                                  class="form-control"
-                                  id="content_textarea"
-                                  rows="3"
-                                  v-model="bot.content"
-                                ></textarea>
+                                <VAceEditor
+                                  v-model:value="bot.content"
+                                  @init="editorInit"
+                                  lang="java"
+                                  theme="textmate"
+                                  style="height: 300px"
+                                  :options="{
+                                    enableBasicAutocompletion: true, //启用基本自动完成
+                                    enableSnippets: true, // 启用代码段
+                                    enableLiveAutocompletion: true, // 启用实时自动完成
+                                    fontSize: 18, //设置字号
+                                    tabSize: 4, // 标签大小
+                                    showPrintMargin: false, //去除编辑器里的竖线
+                                    highlightActiveLine: true,
+                                  }"
+                                />
                               </div>
                             </div>
                             <div class="modal-footer">
@@ -205,7 +226,11 @@
                               >
                                 取消
                               </button>
-                              <button type="button" class="btn btn-primary" @click="update_bot(bot)">
+                              <button
+                                type="button"
+                                class="btn btn-primary"
+                                @click="update_bot(bot)"
+                              >
                                 确认
                               </button>
                             </div>
@@ -237,11 +262,19 @@ import $ from "jquery";
 import { ref } from "vue";
 import { useStore } from "vuex";
 import { Modal } from "bootstrap/dist/js/bootstrap.min.js";
+import { VAceEditor } from "vue3-ace-editor";
+import ace from "ace-builds";
+import "ace-builds/src-noconflict/mode-c_cpp";
+import "ace-builds/src-noconflict/mode-java";
+import "ace-builds/src-noconflict/mode-json";
+import "ace-builds/src-noconflict/theme-chrome";
+import "ace-builds/src-noconflict/ext-language_tools";
 
 export default {
   name: "UserBotIndexView",
   components: {
     ContentCard,
+    VAceEditor,
   },
   setup() {
     const store = new useStore();
@@ -251,6 +284,14 @@ export default {
     let content = ref("");
     let error_message = ref("");
     let bot_id = ref("");
+
+    // 编辑框
+    ace.config.set(
+      "basePath",
+      "https://cdn.jsdelivr.net/npm/ace-builds@" +
+        require("ace-builds").version +
+        "/src-noconflict/"
+    );
 
     const refresh_bots = () => {
       $.ajax({
@@ -270,9 +311,9 @@ export default {
 
     refresh_bots();
 
-    const clear_error = ()=>{
+    const clear_error = () => {
       error_message.value = "";
-    }
+    };
     const add_bot = () => {
       $.ajax({
         url: "http://127.0.0.1:8081/user/bot/add/",
@@ -320,7 +361,7 @@ export default {
         success(resp) {
           if (resp.error_message == "success") {
             refresh_bots();
-            Modal.getInstance("#update_modal"+bot.id).hide();
+            Modal.getInstance("#update_modal" + bot.id).hide();
           } else {
             error_message.value = resp.error_message;
           }
@@ -358,7 +399,7 @@ export default {
       delete_bot,
       bot_id,
       update_bot,
-      clear_error
+      clear_error,
     };
   },
 };

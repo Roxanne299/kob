@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         queryWrapper.eq("username",username);
         Users users = userMapper.selectOne(queryWrapper);
         if(users != null){
-            List<GrantedAuthority> authentication = AuthorityUtils.commaSeparatedStringToAuthorityList("admins");
+            List<GrantedAuthority> authentication = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_admins");
             return new User(username,new BCryptPasswordEncoder().encode(users.getPassword()),authentication);
 
         }
