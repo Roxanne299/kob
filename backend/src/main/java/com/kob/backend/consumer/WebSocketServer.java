@@ -30,7 +30,7 @@ public class WebSocketServer {
     public void onOpen(Session session, @PathParam("token") String token) {
         // 建立连接
         this.session = session;
-        System.out.println("on connected!");
+        System.out.println("websocket on connected!");
         Integer userId = Integer.parseInt(token);
         this.user = userMapper.selectById(userId);
         users.put(userId,this);
@@ -39,7 +39,7 @@ public class WebSocketServer {
     @OnClose
     public void onClose() {
         // 关闭链接
-        System.out.println("on closed!");
+        System.out.println("websocket on closed!");
         if(this.user!=null){
             users.remove(this.user.getId());
         }
