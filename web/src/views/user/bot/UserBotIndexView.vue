@@ -5,7 +5,7 @@
         <div class="col-3">
           <div class="card">
             <div class="card-body">
-              <img :src="$store.state.user.photo" alt="" />
+              <img :src="$store.state.user.photo" alt="用户头像无法加载" />
             </div>
           </div>
         </div>

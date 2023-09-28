@@ -1,34 +1,34 @@
 const ModulePk = {
-    state: {
-        status: "matching", //matching 表示匹配界面 playing 表示对战界面
-        socket: null,
-        opponent_username: "",
-        opponent_photo: "",
-    },
-    getters: {
+     state: {
+          status: "matching", //matching 表示匹配界面 playing 表示对战界面
+          socket: null,
+          opponent_username: "xxx",
+          opponent_photo: "https://cdn.acwing.com/media/article/image/2022/08/09/1_1db2488f17-anonymous.png",
+     },
+     getters: {
 
-    },
-    mutations:{
-       updateStatus(state,status){
-            state.status = status;
-       },
+     },
+     mutations: {
+          updateStatus(state, status) {
+               state.status = status;
+          },
 
-       updateOpponent(state,opponent){
-            state.opponent_photo = opponent.opponent_photo;
-            state.opponent_username = opponent.opponent_username;
-       },
-       updateSocket(state,socket){
-            state.socket = socket;
-       },
-       
+          updateOpponent(state, opponent) {
+               state.opponent_photo = opponent.opponent_photo;
+               state.opponent_username = opponent.opponent_username;
+          },
+          updateSocket(state, socket) {
+               state.socket = socket;
+          },
 
-    },
-    actions: {
-    
-    },
-    modules: {
 
-    }
+     },
+     actions: {
+
+     },
+     modules: {
+
+     }
 
 };
 export default ModulePk;

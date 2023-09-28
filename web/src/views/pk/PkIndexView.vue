@@ -1,42 +1,44 @@
 <template>
-  <PlayGround>PK</PlayGround>
+  <PlayGround v-if="$store.state.pk.status === 'playing'"></PlayGround>
+  <GameMatch v-if="$store.state.pk.status === 'matching'"></GameMatch>
 </template>
 
 <script>
 import PlayGround from "@/components/PlayGround.vue";
-import { onMounted,onUnmounted} from "vue";
 import { useStore } from "vuex";
+import GameMatch from "@/components/GameMatch.vue";
+import { onMounted, onUnmounted } from "vue";
 export default {
   name: "PkIndexView",
   components: {
     PlayGround,
+    GameMatch,
   },
-  setup(){
+  setup() {
     const store = new useStore();
-    const socketUrl = `ws://127.0.0.1:8081/websocket/${store.state.user.id}/`;
+    const socketUrl = `ws://127.0.0.1:8081/websocket/${store.state.user.token}/`;
     let socket = null;
 
-    onMounted(()=>{
+    onMounted(() => {
       socket = new WebSocket(socketUrl);
-      
-      socket.onopen = ()=>{
-          console.log("connected!");
+      socket.onopen = () => {
+        console.log("开始匹配......");
       };
-      socket.onmessage = msg =>{
-        //spring框架返回的消息定义在msg.data里面
-        console.log(msg.data);
+      socket.onmessage = (msg) => {
+        store.commit("updateOpponent", {
+          opponent_username: msg.data.opponent_username,
+          opponent_photo: msg.data.opponent_photo,
+        });
+        setInterval(() => {
+          store.state.pk.status = "playing";
+        }, 1000);
       };
-      socket.onclose = ()=>{
-        console.log("closed");
-      };
+      store.commit("updateSocket", socket);
     });
 
-    //当组件关闭之后就关掉连接
-    onUnmounted(()=>{
-      socket.close();
-    });
-
-  }
+    onUnmounted(() => {});
+    return {};
+  },
 };
 </script>
 
