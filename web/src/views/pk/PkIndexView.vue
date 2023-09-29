@@ -25,9 +25,10 @@ export default {
         console.log("开始匹配......");
       };
       socket.onmessage = (msg) => {
+        let data = JSON.parse(msg.data);
         store.commit("updateOpponent", {
-          opponent_username: msg.data.opponent_username,
-          opponent_photo: msg.data.opponent_photo,
+          opponent_username: data.opponent_username,
+          opponent_photo: data.opponent_photo,
         });
         setInterval(() => {
           store.state.pk.status = "playing";

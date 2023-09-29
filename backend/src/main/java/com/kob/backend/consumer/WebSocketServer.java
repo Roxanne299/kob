@@ -42,6 +42,7 @@ public class WebSocketServer {
             System.out.println("websocket server on connected!");
             Integer userId = JwtAuthentication.getUserId(token);
             this.user = userMapper.selectById(userId);
+            System.out.println(user.getPhoto());
             if(this.user != null)
                 users.put(userId,this);
             else

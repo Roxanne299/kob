@@ -5,7 +5,7 @@
         <div class="pk_img_div">
           <!-- <img :src="$store.state.user.photo" alt="" class="" /> -->
           <img
-            src="https://cdn.acwing.com/media/user/profile/photo/80738_lg_e91297d1fd.jpg"
+            :src="$store.state.user.photo"
             alt="用户头像无法加载"
             class="pk_photo me"
           />
