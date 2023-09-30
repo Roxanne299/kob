@@ -1,6 +1,7 @@
 package com.kob.backend.consumer;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.kob.backend.consumer.utils.GameMap;
 import com.kob.backend.consumer.utils.JwtAuthentication;
 import com.kob.backend.mapper.UserMapper;
 import com.kob.backend.pojo.User;
@@ -42,7 +43,6 @@ public class WebSocketServer {
             System.out.println("websocket server on connected!");
             Integer userId = JwtAuthentication.getUserId(token);
             this.user = userMapper.selectById(userId);
-            System.out.println(user.getPhoto());
             if(this.user != null)
                 users.put(userId,this);
             else
@@ -84,6 +84,10 @@ public class WebSocketServer {
         matchpool.add(this.user);
 
         while(matchpool.size() >= 2){
+
+            GameMap gameMap = new GameMap(14,13,30);
+            gameMap.createGameMap();
+            int[][] g = gameMap.getGameMap();
             Iterator<User> it = matchpool.iterator();
             User a = it.next(), b = it.next();
             matchpool.remove(a);
@@ -94,13 +98,16 @@ public class WebSocketServer {
             jsonObject_a.put("msg","macthing");
             jsonObject_a.put("opponent_username",b.getUsername());
             jsonObject_a.put("opponent_photo",b.getPhoto());
+            jsonObject_a.put("game_map",g);
             users.get(a.getId()).sendMessage(String.valueOf(jsonObject_a));
 
             JSONObject jsonObject_b = new JSONObject();
             jsonObject_b.put("msg","macthing");
             jsonObject_b.put("opponent_username",a.getUsername());
             jsonObject_b.put("opponent_photo",a.getPhoto());
+            jsonObject_b.put("game_map",g);
             users.get(b.getId()).sendMessage(String.valueOf(jsonObject_b));
+            System.out.println("123");
             break;
         }
     }

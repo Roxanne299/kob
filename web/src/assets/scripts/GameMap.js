@@ -2,9 +2,11 @@ import { AcGameObject } from "./AcGameObject";
 import { Snake } from "./Snake";
 import { Wall } from "./Wall";
 export class GameMap extends AcGameObject {
-    constructor(ctx, parent) {
+    constructor(ctx, parent, store) {
         //一定要先构造基类的构造函数
         super();
+
+        this.store = store;
         this.ctx = ctx;
         this.parent = parent;
         //存放每一个单位的绝对距离
@@ -81,59 +83,16 @@ export class GameMap extends AcGameObject {
 
         return true;
     }
-    check_conective(g, sx, sy, tx, ty) {
-        if (sx == tx && sy == ty) return true;
-        g[sx][sy] = true;
-        let dx = [-1, 0, 1, 0];
-        let dy = [0, 1, 0, -1];
-        for (let i = 0; i < 4; i++) {
-            let x = sx + dx[i], y = sy + dy[i];
-            if (x >= 0 && x < this.rows && y >= 0 && y < this.cols && !g[x][y])
-                return this.check_conective(g, x, y, tx, ty);
-        }
-        return false;
-
-    }
     create_walls() {
-        const g = [];
-        //初始化墙
-        for (let r = 0; r < this.rows; r++) {
-            g[r] = [];
-            for (let c = 0; c < this.cols; c++) {
-                g[r][c] = false;
-            }
-        }
-
-        //给墙四周加上
-        for (let r = 0; r < this.rows; r++) {
-            for (let c = 0; c < this.cols; c++) {
-                if (r == 0 || c == 0 || r == this.rows - 1 || c == this.cols - 1)
-                    g[r][c] = true;
-            }
-        }
-
-        //创建内部墙体
-        for (let i = 0; i < this.inner_walls_counts / 2; i++) {
-            for (let j = 0; j < 100010; j++) {
-                let x = parseInt(Math.random() * this.rows);
-                let y = parseInt(Math.random() * this.cols);
-                if (g[x][y] == true || x == this.rows - 2 && y == 1 || y == this.cols - 2 && x == 1) continue;
-                g[x][y] = g[this.rows - x - 1][this.cols - y - 1] = true;
-                break;
-            }
-        }
-        let copy_g = JSON.parse(JSON.stringify(g));
-        if (!this.check_conective(copy_g, this.rows - 2, 1, 1, this.cols - 2)) return false;
-
+        let g = this.store.state.pk.gamemap;
         //花墙
         for (let r = 0; r < this.rows; r++) {
             for (let c = 0; c < this.cols; c++) {
-                if (g[r][c] == true) {
+                if (g[r][c] == 1) {
                     this.walls.push(new Wall(r, c, this));
                 }
             }
         }
-        this.walls.push(new Wall(0, 0, this));
         return true;
 
     }

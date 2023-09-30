@@ -29,6 +29,7 @@ export default {
         store.commit("updateOpponent", {
           opponent_username: data.opponent_username,
           opponent_photo: data.opponent_photo,
+          gamemap: data.game_map,
         });
         setInterval(() => {
           store.state.pk.status = "playing";
