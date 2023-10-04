@@ -60,7 +60,14 @@ export default {
 
         match_btn.value = "取消";
       } else if (match_btn.value == "取消") {
-        socket.close();
+        socket = store.state.pk.socket;
+        if (socket.readyState == 1) {
+          socket.send(
+            JSON.stringify({
+              msg: "cancel_matching",
+            })
+          );
+        }
         match_btn.value = "开始匹配";
       }
     };

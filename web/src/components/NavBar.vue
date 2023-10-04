@@ -40,6 +40,9 @@
               >排行榜</router-link
             >
           </li>
+          <li class="nav-item">
+            {{ $store.state.pk.status }}
+          </li>
         </ul>
         <ul class="navbar-nav" v-if="$store.state.user.is_login">
           <li class="nav-item dropdown">

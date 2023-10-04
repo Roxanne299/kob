@@ -48,41 +48,26 @@ export class GameMap extends AcGameObject {
         }
     }
     add_listening_events() {
-        const [s0, s1] = this.snakes;
+        let direction = -1;
         this.ctx.canvas.focus();
         this.ctx.canvas.addEventListener("keydown", e => {
-            if (e.key === 'w') s0.set_direction(0);
-            else if (e.key === 'd') s0.set_direction(1);
-            else if (e.key === 's') s0.set_direction(2);
-            else if (e.key === 'a') s0.set_direction(3);
-            else if (e.key === 'ArrowUp') s1.set_direction(0);
-            else if (e.key === 'ArrowRight') s1.set_direction(1);
-            else if (e.key === 'ArrowDown') s1.set_direction(2);
-            else if (e.key === 'ArrowLeft') s1.set_direction(3);
+            if (e.key === 'ArrowUp') direction = 0;
+            else if (e.key === 'ArrowRight') direction = 1;
+            else if (e.key === 'ArrowDown') direction = 2;
+            else if (e.key === 'ArrowLeft') direction = 3;
+
+            console.log("key down" + e.key);
+            if (direction >= 0) {
+                this.store.state.pk.socket.send(JSON.stringify({
+                    msg: "move",
+                    direction: direction,
+                }));
+            }
+
         });
 
     }
-    check_valid(cell) {
-        //检测目标位置是不是合法 会不会撞到墙或者两个蛇的身体
 
-        for (const wall of this.walls) {
-            if (wall.x === cell.r && wall.y === cell.c)
-                return false;
-        }
-        for (const snake of this.snakes) {
-            let k = snake.cells.length;
-            //需要特判的是如果当前蛇尾会前进 那么蛇尾就不用判断
-            if (!snake.check_tail_increasing())
-                k--;
-
-            for (let i = 0; i < k; i++) {
-                if (snake.cells[i].c === cell.c && snake.cells[i].r === cell.r)
-                    return false;
-            }
-        }
-
-        return true;
-    }
     create_walls() {
         let g = this.store.state.pk.gamemap;
         //花墙
