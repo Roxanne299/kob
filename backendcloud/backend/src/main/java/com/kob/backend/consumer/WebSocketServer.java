@@ -3,8 +3,10 @@ package com.kob.backend.consumer;
 import com.alibaba.fastjson2.JSONObject;
 import com.kob.backend.consumer.utils.GameMap;
 import com.kob.backend.consumer.utils.JwtAuthentication;
+import com.kob.backend.mapper.BotMapper;
 import com.kob.backend.mapper.RecordMapper;
 import com.kob.backend.mapper.UserMapper;
+import com.kob.backend.pojo.Bot;
 import com.kob.backend.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,15 +29,22 @@ public class WebSocketServer {
     //使用静态变量对所有实例可见  不是静态变量那就是每一个实例有独有一份 并且完成一个线程安全的hashmap
     final public static ConcurrentHashMap<Integer,WebSocketServer> users = new ConcurrentHashMap<>();
 
-    private static RestTemplate restTemplate;
+    public  static RestTemplate restTemplate;
+    @Autowired
+    private static BotMapper botMapper;
+
     private final static String addPlayerUrl = "http://127.0.0.1:8082/player/add/";
     private final static String removePlayerUrl = "http://127.0.0.1:8082/player/remove/";
     public static RecordMapper recordMapper;
     //WebSocket不是spring的标准的组件，不是单例模式的所以需要设置一个独一份的静态变量 用set函数来Autowire
 //    单例模式就是每个类每个事件都只有一个实例，但是我们这个类不是的，有多个实例
     private static UserMapper userMapper;
-    private GameMap game = null;
+    public GameMap game = null;
 
+    @Autowired
+    public void setBotMapper(BotMapper botMapper){
+        WebSocketServer.botMapper = botMapper;
+    }
     @Autowired
     public void setUserMapper(UserMapper userMapper){
         WebSocketServer.userMapper = userMapper;
@@ -81,7 +90,7 @@ public class WebSocketServer {
         String msg = String.valueOf(object.get("msg"));
         System.out.println(msg);
         if("matching".equals(msg)){
-            startMatching();
+            startMatching(Integer.parseInt(String.valueOf(object.get("bot_id"))));
         }
         else if("cancel_matching".equals(msg)){
             stopMatching();
@@ -94,9 +103,10 @@ public class WebSocketServer {
     public void onError(Session session, Throwable error) {
         error.printStackTrace();
     }
-    public  static void startGame(Integer aId, Integer bId){
+    public  static void startGame(Integer aId, Integer aBotId,Integer bId,Integer bBotId){
         User a = userMapper.selectById(aId),b = userMapper.selectById(bId);
-        GameMap gameMap = new GameMap(14,13,30,a.getId(),b.getId());
+        Bot aBot = botMapper.selectById(aBotId),bBot = botMapper.selectById(bBotId);
+        GameMap gameMap = new GameMap(14,13,30,a.getId(),aBot,b.getId(),bBot);
         gameMap.createGameMap();
         gameMap.start();
         if(users.get(a.getId()) != null)
@@ -131,10 +141,11 @@ public class WebSocketServer {
         if(users.get(b.getId()) != null)
             users.get(b.getId()).sendMessage(String.valueOf(jsonObject_b));
     }
-    public void startMatching(){
+    public void startMatching(Integer botId){
         System.out.println("server start matching....");
         MultiValueMap<String,String> data = new LinkedMultiValueMap<>();
         data.add("user_id",user.getId().toString());
+        data.add("bot_id",botId.toString());
         data.add("rating",user.getRating().toString());
 //        向matchingsystem通信
         restTemplate.postForObject(addPlayerUrl,data,String.class);
@@ -143,9 +154,12 @@ public class WebSocketServer {
 
     public void move(int direction){
         if(game.getPlayerA().getId() == user.getId()){
-            game.setNextStepA(direction);
+            // 这个判断就是为了屏蔽前端操作的
+            if(game.getPlayerA().getBotId() == -1)
+                game.setNextStepA(direction);
         }else if(game.getPlayerB().getId() == user.getId()){
-            game.setNextStepB(direction);
+            if(game.getPlayerB().getBotId() == -1)
+                game.setNextStepB(direction);
         }
     }
     public void stopMatching(){

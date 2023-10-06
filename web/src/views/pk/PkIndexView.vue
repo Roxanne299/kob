@@ -64,6 +64,7 @@ export default {
     onUnmounted(() => {
       socket.close();
       store.commit("updateStatus", "matching");
+      store.commit("updateLoser", "none");
     });
     return {};
   },

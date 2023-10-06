@@ -14,6 +14,8 @@ public class Player {
     private Integer id;
     private Integer sx;
     private Integer sy;
+    private Integer botId;
+    private String botCode;
     private List<Integer> steps;
 
     public boolean check_increasing(int step){
