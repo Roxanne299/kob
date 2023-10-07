@@ -88,7 +88,8 @@
                             showPrintMargin: false, //去除编辑器里的竖线
                             highlightActiveLine: true,
                           }"
-                        />
+                          >{{ add_bot_code_content }}</VAceEditor
+                        >
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -281,7 +282,9 @@ export default {
     let bots = ref([]);
     let title = ref("");
     let description = ref("");
-    let content = ref("");
+    let content = ref(
+      "package com.kob.botrunningsystem.utils;\npublic class Bot implements BotInterface{\n    //重写这个方法，返回值分别是上下左右（0，1，2，3）\n@Override\n    public Integer nextMove(String input) {\n        return 0;\n    }\n}"
+    );
     let error_message = ref("");
     let bot_id = ref("");
 

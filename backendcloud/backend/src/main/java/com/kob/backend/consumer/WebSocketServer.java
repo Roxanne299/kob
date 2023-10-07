@@ -33,12 +33,13 @@ public class WebSocketServer {
     @Autowired
     private static BotMapper botMapper;
 
+
     private final static String addPlayerUrl = "http://127.0.0.1:8082/player/add/";
     private final static String removePlayerUrl = "http://127.0.0.1:8082/player/remove/";
     public static RecordMapper recordMapper;
     //WebSocket不是spring的标准的组件，不是单例模式的所以需要设置一个独一份的静态变量 用set函数来Autowire
 //    单例模式就是每个类每个事件都只有一个实例，但是我们这个类不是的，有多个实例
-    private static UserMapper userMapper;
+    public  static UserMapper userMapper;
     public GameMap game = null;
 
     @Autowired
@@ -81,6 +82,11 @@ public class WebSocketServer {
         if(this.user!=null){
             users.remove(this.user.getId());
         }
+        // 问题描述: 开始匹配后，刷新当前页面，断开连接，再次匹配，实现自己和自己匹配
+        // 解决方案: 断开链接时，删除已经存在在匹配池里的player信息，避免自己和自己匹配
+        MultiValueMap<String, String> data = new LinkedMultiValueMap<>();
+        data.add("user_id", this.user.getId().toString());
+        restTemplate.postForObject(removePlayerUrl, data, String.class);
     }
     @OnMessage
     public void onMessage(String message, Session session) {
