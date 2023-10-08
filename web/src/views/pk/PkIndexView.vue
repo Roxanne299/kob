@@ -22,6 +22,7 @@ export default {
     const socketUrl = `ws://127.0.0.1:8081/websocket/${store.state.user.token}/`;
     let socket = null;
 
+    store.commit("updateIsRecord", false);
     onMounted(() => {
       socket = new WebSocket(socketUrl);
       socket.onopen = () => {

@@ -48,23 +48,45 @@ export class GameMap extends AcGameObject {
         }
     }
     add_listening_events() {
-        let direction = -1;
-        this.ctx.canvas.focus();
-        this.ctx.canvas.addEventListener("keydown", e => {
-            if (e.key === 'ArrowUp') direction = 0;
-            else if (e.key === 'ArrowRight') direction = 1;
-            else if (e.key === 'ArrowDown') direction = 2;
-            else if (e.key === 'ArrowLeft') direction = 3;
+        if (this.store.state.record.is_record) {
+            let k = 0;
 
-            console.log("key down" + e.key);
-            if (direction >= 0) {
-                this.store.state.pk.socket.send(JSON.stringify({
-                    msg: "move",
-                    direction: direction,
-                }));
-            }
+            const a_step = this.store.state.record.a_step;
+            const b_step = this.store.state.record.b_step;
+            const loser = this.store.state.record.record_loser;
+            const [snake0, snake1] = this.snakes;
+            const interval_id = setInterval(() => {
+                console.log(a_step);
+                if (k >= a_step.length - 1) {
+                    if (loser == "all" || loser == "A") snake0.status = "die";
+                    if (loser == "all" || loser == "B") snake1.status = "die";
+                    clearInterval(interval_id);
+                } else {
+                    snake0.set_direction(a_step[k]);
+                    snake1.set_direction(b_step[k]);
+                }
+                k++;
+            }, 300);
+        } else {
+            let direction = -1;
+            this.ctx.canvas.focus();
+            this.ctx.canvas.addEventListener("keydown", e => {
+                if (e.key === 'ArrowUp') direction = 0;
+                else if (e.key === 'ArrowRight') direction = 1;
+                else if (e.key === 'ArrowDown') direction = 2;
+                else if (e.key === 'ArrowLeft') direction = 3;
 
-        });
+                console.log("key down" + e.key);
+                if (direction >= 0) {
+                    this.store.state.pk.socket.send(JSON.stringify({
+                        msg: "move",
+                        direction: direction,
+                    }));
+                }
+
+            });
+        }
+
 
     }
 

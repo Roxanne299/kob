@@ -6,23 +6,23 @@ const ModuleUser = {
         username: "",
         photo: "",
         token: "",
-        is_login:false,
+        is_login: false,
         polling: false,
     },
     getters: {
 
     },
-    mutations:{
-        updateUser(state,user){
+    mutations: {
+        updateUser(state, user) {
             state.id = user.id;
             state.username = user.username;
             state.photo = user.photo;
             state.is_login = user.is_login;
         },
-        updateToken(state,token){
+        updateToken(state, token) {
             state.token = token;
         },
-        logout(state){
+        logout(state) {
             state.id = "";
             state.username = "";
             state.photo = "";
@@ -31,16 +31,16 @@ const ModuleUser = {
             state.polling = false;
             localStorage.removeItem("token");
             //防止还能访问当前页面 跳转登录页面
-            router.push({name: "user_account_login"});
-            
+            router.push({ name: "user_account_login" });
+
         },
-        updatePolling(state,polling){
+        updatePolling(state, polling) {
             state.polling = polling;
         }
 
     },
     actions: {
-        login(context,data){
+        login(context, data) {
             $.ajax({
                 url: "http://127.0.0.1:8081/user/account/token/",
                 type: "post",
@@ -48,29 +48,29 @@ const ModuleUser = {
                     username: data.username,
                     password: data.password,
                 },
-                success(resp){
-                    if(resp.error_message == "success"){
+                success(resp) {
+                    if (resp.error_message == "success") {
                         //登录成功之后将token存入LocalStorage
-                        localStorage.setItem("token",resp.token);
-                        context.commit("updateToken",resp.token);
+                        localStorage.setItem("token", resp.token);
+                        context.commit("updateToken", resp.token);
                         data.success(resp);
                     }
                 },
-                error(){
+                error() {
                     data.error();
                 }
             });
         },
-        getInfo(context,data){
+        getInfo(context, data) {
             $.ajax({
                 url: "http://127.0.0.1:8081/user/account/info/",
                 type: "get",
-                headers:{
+                headers: {
                     'Authorization': 'Bearer ' + context.state.token,
                 },
-                success(resp){
-                    if(resp.error_message == "success"){
-                        context.commit("updateUser",{
+                success(resp) {
+                    if (resp.error_message == "success") {
+                        context.commit("updateUser", {
                             id: resp.id,
                             photo: resp.photo,
                             username: resp.username,
@@ -79,12 +79,12 @@ const ModuleUser = {
                         data.success(data);
                     }
                 },
-                error(resp){
+                error(resp) {
                     data.error(resp);
                 }
             });
         },
-        logout(context){
+        logout(context) {
             context.commit("logout");
         }
 
