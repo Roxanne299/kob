@@ -41,8 +41,30 @@
           </td>
         </tr>
       </tbody>
-    </table></ContentCard
-  >
+    </table>
+    <nav aria-label="Page navigation example" style="float: right">
+      <ul class="pagination">
+        <li class="page-item" @click="click_page(-2)">
+          <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li
+          v-for="page in pages"
+          :key="page.num"
+          :class="'page-item ' + page.is_active"
+          @click="click_page(page.num)"
+        >
+          <a class="page-link" href="#">{{ page.num }}</a>
+        </li>
+        <li class="page-item" @click="click_page(-1)">
+          <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </ContentCard>
 </template>
 
 <script>
@@ -61,7 +83,28 @@ export default {
     let current_page = 1;
     let record_list = ref([]);
     let records_total = 0;
+    let pages = ref([]);
 
+    let update_page = (page) => {
+      let list = [];
+      let max = Math.ceil(records_total / 10);
+      for (let i = page - 2; i <= page + 2; i++) {
+        if (i >= 1 && i <= max)
+          list.push({
+            num: i,
+            is_active: i == current_page ? "active" : "",
+          });
+      }
+      pages.value = list;
+    };
+
+    let click_page = (page) => {
+      let max = Math.ceil(records_total / 10);
+      let target = page;
+      if (page == -2) target = current_page - 1;
+      if (page == -1) target = current_page + 1;
+      if (target >= 1 && target <= max) query_page(target);
+    };
     let query_page = (page) => {
       $.ajax({
         url: "http://127.0.0.1:8081/record/getlist/",
@@ -76,6 +119,8 @@ export default {
         success(resp) {
           record_list.value = resp.records;
           records_total = resp.records_count;
+          current_page = page;
+          update_page(page);
           console.log(resp);
         },
         error(resp) {
@@ -127,6 +172,9 @@ export default {
       record_list,
       records_total,
       open_record,
+      update_page,
+      click_page,
+      pages,
     };
   },
 };
