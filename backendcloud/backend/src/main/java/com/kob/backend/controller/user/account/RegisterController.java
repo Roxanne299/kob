@@ -21,7 +21,8 @@ public class RegisterController {
         String username = map.get("username");
         String password = map.get("password");
         String confirmPassword = map.get("confirmPassword");
-        return registerService.register(username,password,confirmPassword);
+        String imgUrl = map.get("imgUrl");
+        return registerService.register(username,password,confirmPassword,imgUrl);
 
     }
 

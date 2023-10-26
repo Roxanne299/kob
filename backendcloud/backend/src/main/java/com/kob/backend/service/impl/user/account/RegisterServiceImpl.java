@@ -20,8 +20,12 @@ public class RegisterServiceImpl implements RegisterService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
-    public Map<String, String> register(String username, String password, String confirmPassword) {
+    public Map<String, String> register(String username, String password, String confirmPassword,String imgUrl) {
         Map<String,String> map = new HashMap<>();
+        if(imgUrl == null){
+            map.put("error_message","头像不能为空");
+            return map;
+        }
         if(username == null){
             map.put("error_message","用户名不能为空");
             return map;
@@ -56,7 +60,7 @@ public class RegisterServiceImpl implements RegisterService {
             return map;
         }
         //因为id是自增的，所以传一个null就好了
-        userMapper.insert(new User(null,username,passwordEncoder.encode(password),"https://cdn.acwing.com/media/user/profile/photo/80738_lg_05b87e238e.jpeg",1500));
+        userMapper.insert(new User(null,username,passwordEncoder.encode(password),imgUrl,1500));
         map.put("error_message","success");
 
         return map;

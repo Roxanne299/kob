@@ -47,11 +47,13 @@ export default {
     const username = ref("");
     const password = ref("");
     const error_message = ref("");
+
+    const img_name = ref("");
     let token = localStorage.getItem("token");
 
-    store.commit("updatePolling",true);
+    store.commit("updatePolling", true);
     if (token == null) {
-      store.commit("updatePolling",false);
+      store.commit("updatePolling", false);
     } else {
       //更新全局信息token
       store.commit("updateToken", token);
@@ -59,11 +61,11 @@ export default {
         success() {
           //验证成功跳转到首页
           router.push({ name: "pk_index" });
-          store.commit("updatePolling",false);
+          store.commit("updatePolling", false);
         },
         error() {
           localStorage.removeItem("token");
-          store.commit("updatePolling",false);
+          store.commit("updatePolling", false);
         },
       });
     }
@@ -97,6 +99,8 @@ export default {
       password,
       error_message,
       login,
+
+      img_name,
     };
   },
 };
@@ -106,7 +110,8 @@ export default {
 button {
   width: 100%;
 }
-.error_message {
+.error_message,
+.upload_status {
   color: red;
 }
 </style>
